@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* WADOU Tasty BENIN - African Earth Palette */
+    --background: 48 100% 98%;
+    --foreground: 21 78% 26%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 21 78% 26%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 21 78% 26%;
+
+    --primary: 35 92% 44%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 48 100% 96%;
+    --secondary-foreground: 21 78% 26%;
+
+    --muted: 48 20% 90%;
+    --muted-foreground: 21 40% 40%;
+
+    --accent: 155 74% 24%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 21 30% 90%;
+    --input: 21 30% 90%;
+    --ring: 35 92% 44%;
+
+    /* Fonts */
+    --font-sans: 'Geist', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+    --font-display: 'Playfair Display', serif;
+
+    /* Shadows */
+    --shadow-2xs: 0px 4px 8px -1px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0px 4px 8px -1px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 1px 2px -2px hsl(0 0% 0% / 0.10);
+    --shadow: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 1px 2px -2px hsl(0 0% 0% / 0.10);
+    --shadow-md: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 2px 4px -2px hsl(0 0% 0% / 0.10);
+    --shadow-lg: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 4px 6px -2px hsl(0 0% 0% / 0.10);
+    --shadow-xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.10), 0px 8px 10px -2px hsl(0 0% 0% / 0.10);
+    --shadow-2xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.25);
+
+    /* Misc */
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 21 92% 14%;
+    --foreground: 48 100% 96%;
+
+    --card: 21 92% 10%;
+    --card-foreground: 48 100% 96%;
+
+    --popover: 21 92% 10%;
+    --popover-foreground: 48 100% 96%;
+
+    --primary: 35 92% 44%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 21 60% 20%;
+    --secondary-foreground: 48 100% 96%;
+
+    --muted: 21 60% 20%;
+    --muted-foreground: 21 40% 60%;
+
+    --accent: 155 74% 24%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 21 60% 20%;
+    --input: 21 60% 20%;
+    --ring: 35 92% 44%;
+
+    /* Charts */
+    --chart-1: 35 92% 44%;
+    --chart-2: 155 74% 24%;
+    --chart-3: 0 84% 60%;
+    --chart-4: 48 100% 96%;
+    --chart-5: 21 78% 26%;
+
+    /* Sidebar */
+    --sidebar: 21 92% 10%;
+    --sidebar-foreground: 48 100% 96%;
+    --sidebar-primary: 35 92% 44%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 21 60% 20%;
+    --sidebar-accent-foreground: 48 100% 96%;
+    --sidebar-border: 21 60% 20%;
+    --sidebar-ring: 35 92% 44%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans), 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    letter-spacing: var(--tracking-normal);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif), 'Playfair Display', serif;
+    @apply tracking-tight;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
