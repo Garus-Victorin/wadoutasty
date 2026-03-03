@@ -117,11 +117,11 @@ export const Footer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-6">
         <p className="text-xs text-background/40 font-medium">
-          &copy; {currentYear} WADOU Tasty BENIN. Tous droits réservés.
+          &copy; 2026 WADOU Tasty BENIN. Tous droits réservés.
         </p>
         <div className="flex items-center gap-8 text-xs text-background/40 font-medium">
           <a href="#" className="hover:text-primary transition-colors">Politique de Confidentialité</a>
-          <a href="#" className="hover:text-primary transition-colors">CGV</a>
+          <a href="#" className="hover:text-primary transition-colors">ADH Digital</a>
         </div>
       </div>
     </footer>

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Utensils, Clock, MapPin, Star, ArrowRight, Phone, Instagram, Facebook, UtensilsCrossed, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { blink } from '@/lib/blink';
 import { motion } from 'framer-motion';
 
 interface MenuItem {
@@ -14,27 +13,35 @@ interface MenuItem {
   image_url: string;
 }
 
+// Static featured items data (replaces blink.db call)
+const featuredItems: MenuItem[] = [
+  {
+    id: '1',
+    name: 'Amiwo au Poulet',
+    description: 'Le classique du Bénin. Pommes de terre grillées accompagnées de sauce tomate épicée et poulet rôti.',
+    price: '4.500 XOF',
+    category: 'Signature',
+    image_url: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    id: '2',
+    name: 'Wagassi Grillé',
+    description: 'Fromage deinggué traditionnellement grillé, accompagné de Sauce Arachide et de pikliz.',
+    price: '3.500 XOF',
+    category: 'Signature',
+    image_url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    id: '3',
+    name: 'Foutou Banane',
+    description: 'Purée de bananes plantains pilée, servie avec sauce graine et viande de boeuf.',
+    price: '5.000 XOF',
+    category: ' Traditionnel',
+    image_url: 'https://images.unsplash.com/photo-1607532941433-304659e8198a?q=80&w=800&auto=format&fit=crop'
+  }
+];
+
 export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ onPageChange }) => {
-  const [featuredItems, setFeaturedItems] = useState<MenuItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchFeatured = async () => {
-      try {
-        const data = await blink.db.menuItems.list({
-          where: { isFeatured: "1" },
-          limit: 3
-        });
-        setFeaturedItems(data as MenuItem[]);
-      } catch (error) {
-        console.error('Error fetching featured items:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchFeatured();
-  }, []);
-
   const stats = [
     { label: 'Plats Authentiques', value: '50+' },
     { label: 'Clients Heureux', value: '10k+' },
@@ -217,43 +224,37 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {loading ? (
-              [1, 2, 3].map((i) => (
-                <div key={i} className="bg-white rounded-3xl aspect-[4/5] animate-pulse shadow-sm" />
-              ))
-            ) : (
-              featuredItems.map((item) => (
-                <Card key={item.id} className="group overflow-hidden rounded-3xl border-none shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <img 
-                      src={item.image_url} 
-                      alt={item.name} 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-                    <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary bg-white/10 backdrop-blur-md px-3 py-1 rounded-full self-start border border-white/20">
-                        {item.category}
-                      </span>
-                      <h3 className="text-2xl font-display font-bold text-white">{item.name}</h3>
-                      <p className="text-sm text-white/70 line-clamp-2 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity delay-100">
-                        {item.description}
-                      </p>
-                      <div className="flex items-center justify-between mt-4">
-                        <span className="text-2xl font-bold text-primary">{item.price}</span>
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          className="text-white hover:text-primary p-0 h-auto font-bold opacity-0 group-hover:opacity-100 transition-opacity delay-200"
-                        >
-                          Commander <ArrowRight className="ml-2 w-4 h-4" />
-                        </Button>
-                      </div>
+            {featuredItems.map((item) => (
+              <Card key={item.id} className="group overflow-hidden rounded-3xl border-none shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img 
+                    src={item.image_url} 
+                    alt={item.name} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                  <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary bg-white/10 backdrop-blur-md px-3 py-1 rounded-full self-start border border-white/20">
+                      {item.category}
+                    </span>
+                    <h3 className="text-2xl font-display font-bold text-white">{item.name}</h3>
+                    <p className="text-sm text-white/70 line-clamp-2 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                      {item.description}
+                    </p>
+                    <div className="flex items-center justify-between mt-4">
+                      <span className="text-2xl font-bold text-primary">{item.price}</span>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-white hover:text-primary p-0 h-auto font-bold opacity-0 group-hover:opacity-100 transition-opacity delay-200"
+                      >
+                        Commander <ArrowRight className="ml-2 w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
-                </Card>
-              ))
-            )}
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -273,7 +274,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
           <div className="relative w-full">
             <div className="flex flex-col gap-8 p-12 bg-white/5 backdrop-blur-xl rounded-[40px] border border-white/10 shadow-2xl">
               <p className="text-xl md:text-2xl text-white/90 italic leading-relaxed font-medium">
-                "WADOU Tasty est bien plus qu'un restaurant, c'est une expérience. L'accueil est aussi chaleureux que les plats sont savoureux. L'Amiwo au poulet est tout simplement divin. Un passage obligé à Agblangandan !"
+                "WADOU Tasty est bien plus qu'un restaurant, c'est une expérience. L'accueil est aussi chaleureux que les plats sont savoureux. L'Amiwo au poulet est tout simplement divin. Un passage incontourn à Agblangandan !"
               </p>
               <div className="flex flex-col items-center gap-4">
                 <div className="flex items-center gap-1">

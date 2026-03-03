@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { blink } from '@/lib/blink';
-import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Calendar as CalendarIcon, Clock, Users, Phone, Mail, User, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Users, Phone, Mail, User, CheckCircle2, ChevronRight, Star } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { addReservation } from '@/lib/database';
 
 export const ReservationPage: React.FC = () => {
-  const { user, login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -19,29 +17,30 @@ export const ReservationPage: React.FC = () => {
     date: '',
     time: '',
     guests: '2',
+    specialRequests: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) {
-      toast.error('Veuillez vous connecter pour réserver une table.');
-      login();
-      return;
-    }
 
     setLoading(true);
+    
     try {
-      await blink.db.reservations.create({
-        userId: user.id,
-        ...formData,
+      // Save reservation to Supabase
+      await addReservation({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        date: formData.date,
+        time: formData.time,
         guests: parseInt(formData.guests),
-        status: 'pending'
+        special_requests: formData.specialRequests,
       });
+      
       setSuccess(true);
       toast.success('Votre demande de réservation a été envoyée !');
     } catch (error) {
-      console.error('Error creating reservation:', error);
-      toast.error('Une erreur est survenue lors de la réservation.');
+      toast.error('Une erreur est survenue. Veuillez réessayer.');
     } finally {
       setLoading(false);
     }
@@ -80,7 +79,7 @@ export const ReservationPage: React.FC = () => {
           </div>
           <Button 
             className="w-full h-14 rounded-xl font-bold"
-            onClick={() => setSuccess(false)}
+            onClick={() => window.location.reload()}
           >
             Retourner au site
           </Button>
@@ -181,132 +180,126 @@ export const ReservationPage: React.FC = () => {
             {/* Form Background Accent */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
             
-            {!user ? (
-              <div className="flex flex-col items-center justify-center py-20 text-center gap-8">
-                <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center">
-                  <User className="w-10 h-10 text-muted-foreground" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-2xl font-display font-bold">Connexion Requise</h3>
-                  <p className="text-muted-foreground max-w-sm mx-auto">
-                    Veuillez vous connecter pour effectuer une réservation et suivre son statut en temps réel.
-                  </p>
-                </div>
-                <Button onClick={login} size="lg" className="h-14 px-10 rounded-xl font-bold">
-                  Se Connecter
-                </Button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-8 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-3">
-                    <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Nom Complet</Label>
-                    <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
-                      <Input 
-                        id="name" 
-                        required 
-                        placeholder="Votre nom" 
-                        className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
-                        value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Téléphone</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
-                      <Input 
-                        id="phone" 
-                        required 
-                        type="tel" 
-                        placeholder="+229 ..." 
-                        className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      />
-                    </div>
-                  </div>
-                </div>
-
+            <form onSubmit={handleSubmit} className="flex flex-col gap-8 relative z-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-3">
-                  <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Email</Label>
+                  <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Nom Complet</Label>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
                     <Input 
-                      id="email" 
+                      id="name" 
                       required 
-                      type="email" 
-                      placeholder="votre@email.com" 
+                      placeholder="Votre nom" 
                       className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
                     />
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="flex flex-col gap-3">
-                    <Label htmlFor="date" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Date</Label>
-                    <div className="relative">
-                      <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
-                      <Input 
-                        id="date" 
-                        required 
-                        type="date" 
-                        className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
-                        value={formData.date}
-                        onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    <Label htmlFor="time" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Heure</Label>
-                    <div className="relative">
-                      <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
-                      <Input 
-                        id="time" 
-                        required 
-                        type="time" 
-                        className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
-                        value={formData.time}
-                        onChange={(e) => setFormData({...formData, time: e.target.value})}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    <Label htmlFor="guests" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Personnes</Label>
-                    <div className="relative">
-                      <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
-                      <Input 
-                        id="guests" 
-                        required 
-                        type="number" 
-                        min="1" 
-                        max="20" 
-                        className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
-                        value={formData.guests}
-                        onChange={(e) => setFormData({...formData, guests: e.target.value})}
-                      />
-                    </div>
+                <div className="flex flex-col gap-3">
+                  <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Téléphone</Label>
+                  <div className="relative">
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
+                    <Input 
+                      id="phone" 
+                      required 
+                      type="tel" 
+                      placeholder="+229 ..." 
+                      className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    />
                   </div>
                 </div>
+              </div>
 
-                <Button 
-                  type="submit" 
-                  disabled={loading} 
-                  className="w-full h-16 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 mt-4 group"
-                >
-                  {loading ? 'Envoi en cours...' : 'Confirmer la Réservation'}
-                  <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                
-                <p className="text-center text-xs text-muted-foreground mt-2 italic">
-                  * Nous vous recontacterons dans les 15 minutes pour confirmer votre réservation.
-                </p>
-              </form>
-            )}
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
+                  <Input 
+                    id="email" 
+                    required 
+                    type="email" 
+                    placeholder="votre@email.com" 
+                    className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="flex flex-col gap-3">
+                  <Label htmlFor="date" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Date</Label>
+                  <div className="relative">
+                    <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
+                    <Input 
+                      id="date" 
+                      required 
+                      type="date" 
+                      className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
+                      value={formData.date}
+                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <Label htmlFor="time" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Heure</Label>
+                  <div className="relative">
+                    <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
+                    <Input 
+                      id="time" 
+                      required 
+                      type="time" 
+                      className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
+                      value={formData.time}
+                      onChange={(e) => setFormData({...formData, time: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <Label htmlFor="guests" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Personnes</Label>
+                  <div className="relative">
+                    <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
+                    <Input 
+                      id="guests" 
+                      required 
+                      type="number" 
+                      min="1" 
+                      max="20" 
+                      className="pl-12 h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary focus:border-primary"
+                      value={formData.guests}
+                      onChange={(e) => setFormData({...formData, guests: e.target.value})}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="specialRequests" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Demandes Spéciales (Optionnel)</Label>
+                <textarea 
+                  id="specialRequests"
+                  placeholder="Allergies, événements spéciaux, préférences..." 
+                  className="w-full h-24 p-4 bg-muted/30 border border-border/50 rounded-xl focus:ring-primary focus:border-primary resize-none"
+                  value={formData.specialRequests}
+                  onChange={(e) => setFormData({...formData, specialRequests: e.target.value})}
+                />
+              </div>
+
+              <Button 
+                type="submit" 
+                disabled={loading} 
+                className="w-full h-16 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 mt-4 group"
+              >
+                {loading ? 'Envoi en cours...' : 'Confirmer la Réservation'}
+                <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              
+              <p className="text-center text-xs text-muted-foreground mt-2 italic">
+                * Nous vous recontacterons dans les 15 minutes pour confirmer votre réservation.
+              </p>
+            </form>
           </div>
         </div>
       </section>

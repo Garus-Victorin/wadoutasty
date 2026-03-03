@@ -1,0 +1,164 @@
+{
+  "menuItems": [
+    {
+      "id": "1",
+      "name": "Amiwo au Poulet",
+      "description": "Le classique du Benin. Pommes de terre grillees accompagnees de sauce tomato epicee et roti.",
+      "price": "4.500 XOF",
+      "category": "Signature",
+      "image_url": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&auto=format&fit=crop"
+    },
+    {
+      "id": "2",
+      "name": "Wagassi Grille",
+      "description": "Fromage deinggué traditionnellement grille, accompagne de Sauce Arachide et de pikliz.",
+      "price": "3.500 XOF",
+      "category": "Signature",
+      "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&auto=format&fit=crop"
+    },
+    {
+      "id": "3",
+      "name": "Foutou Banane",
+      "description": "Puree de bananes plantains pilee, servie avec sauce graine et viande de boeuf.",
+      "price": "5.000 XOF",
+      "category": " Traditionnel",
+      "image_url": "https://images.unsplash.com/photo-1547592180-85f173990554?w=800&auto=format&fit=crop"
+    },
+    {
+      "id": "4",
+      "name": "Kedjenou",
+      "description": "Ragoout de poulet ou poisson cuits a la vapeur avec legumes et epices.",
+      "price": "4.000 XOF",
+      "category": " Traditionnel",
+      "image_url": "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=800&auto=format&fit=crop"
+    },
+    {
+      "id": "5",
+      "name": "Pikliz",
+      "description": "Melange de legumes marine tres epice, accompagnant parfaitement les grillades.",
+      "price": "1.500 XOF",
+      "category": "Entrées",
+      "image_url": "https://images.unsplash.com/photo-1626508035297-c2b20a67a7c5?w=800&auto=format&fit=crop"
+    },
+    {
+      "id": "6",
+      "name": "Tchapalo",
+      "description": "Biere traditionnelle beninoise, blonde et mousseuse.",
+      "price": "1.000 XOF",
+      "category": "Boissons",
+      "image_url": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&auto=format&fit=crop"
+    }
+  ],
+  "reservations": [
+    {
+      "id": "1",
+      "name": "Jean Dupont",
+      "email": "jean@example.com",
+      "phone": "+229 66620716",
+      "date": "2024-12-25",
+      "time": "19:00",
+      "guests": 4,
+      "specialRequests": "Anniversaire, besoin место calme",
+      "status": "en attente",
+      "createdAt": "2024-12-20T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "name": "Marie Kwami",
+      "email": "marie@example.com",
+      "phone": "+229 97 00 00 00",
+      "date": "2024-12-26",
+      "time": "12:30",
+      "guests": 2,
+      "specialRequests": "",
+      "status": "en cours",
+      "createdAt": "2024-12-21T14:00:00Z"
+    },
+    {
+      "id": "3",
+      "name": "Paul Ahouandjinou",
+      "email": "paul@example.com",
+      "phone": "+229 98 00 00 00",
+      "date": "2024-12-27",
+      "time": "20:00",
+      "guests": 6,
+      "specialRequests": "Groupe familial",
+      "status": "termine",
+      "createdAt": "2024-12-22T09:00:00Z"
+    }
+  ],
+  "contacts": [
+    {
+      "id": "1",
+      "name": "Marie Kwami",
+      "email": "marie@example.com",
+      "phone": "+229 97 00 00 00",
+      "message": "Bonjour, je voudrais organiser un evenement familial pour 20 personnes. Est-ce possible?",
+      "createdAt": "2024-12-19T15:30:00Z",
+      "read": false
+    },
+    {
+      "id": "2",
+      "name": "Thomas Houssou",
+      "email": "thomas@example.com",
+      "phone": "+229 99 00 00 00",
+      "message": "Excellente cuisine! Je recommande le Wagassi grille.",
+      "createdAt": "2024-12-18T11:00:00Z",
+      "read": true
+    }
+  ],
+  "orders": [
+    {
+      "id": "1",
+      "name": "Alexandre Todjihounde",
+      "email": "alex@example.com",
+      "phone": "+229 90 11 22 33",
+      "address": "Cotonou, Rue 123 Akpata",
+      "items": "1x Amiwo au Poulet, 1x Foutou Banane",
+      "total": "9.500 XOF",
+      "special_requests": "Sans pikliz, svp",
+      "status": "en attente",
+      "created_at": "2024-12-23T18:30:00Z"
+    },
+    {
+      "id": "2",
+      "name": "Fatou Baba",
+      "email": "fatou@example.com",
+      "phone": "+229 94 55 66 77",
+      "address": "Porto-Novo, Quartier Ouedeme",
+      "items": "2x Wagassi Grille, 1x Pikliz",
+      "total": "8.500 XOF",
+      "special_requests": "",
+      "status": "en cours",
+      "created_at": "2024-12-22T14:00:00Z"
+    },
+    {
+      "id": "3",
+      "name": "Christian Degnon",
+      "email": "christian@example.com",
+      "phone": "+229 96 77 88 99",
+      "address": "Abomey-Calavi, Zone Residentielle",
+      "items": "1x Kedjenou, 2x Tchapalo",
+      "total": "6.000 XOF",
+      "special_requests": "Livrer avant 19h",
+      "status": "termine",
+      "created_at": "2024-12-21T12:00:00Z"
+    },
+    {
+      "id": "4",
+      "name": "Sandrine Affo",
+      "email": "sandrine@example.com",
+      "phone": "+229 91 23 45 67",
+      "address": "Cotonou, Fidrossesse",
+      "items": "1x Amiwo au Poulet",
+      "total": "4.500 XOF",
+      "special_requests": "",
+      "status": "en attente",
+      "created_at": "2024-12-24T10:00:00Z"
+    }
+  ],
+  "admin": {
+    "email": "admin@wadoutasty.bj",
+    "password": "admin123"
+  }
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Instagram, Facebook, Twitter, UtensilsCrossed, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,12 +6,34 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { addContact } from '@/lib/database';
 
 export const ContactPage: React.FC = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.success('Message envoyé ! Nous vous répondrons dès que possible.');
-    (e.target as HTMLFormElement).reset();
+    setLoading(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    
+    try {
+      // Save contact to Supabase
+      await addContact({
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        phone: formData.get('phone') as string || '',
+        message: formData.get('message') as string,
+      });
+      
+      toast.success('Message envoyé ! Nous vous répondrons dès que possible.');
+      form.reset();
+    } catch (error) {
+      toast.error('Une erreur est survenue. Veuillez réessayer.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -114,17 +136,19 @@ export const ContactPage: React.FC = () => {
                   <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest ml-1">Nom</Label>
                   <Input 
                     id="name" 
+                    name="name"
                     required 
                     placeholder="Votre nom" 
                     className="h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary"
                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <Label htmlFor="subject" className="text-xs font-bold uppercase tracking-widest ml-1">Sujet</Label>
+                  <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-widest ml-1">Téléphone</Label>
                   <Input 
-                    id="subject" 
-                    required 
-                    placeholder="Objet du message" 
+                    id="phone" 
+                    name="phone"
+                    type="tel"
+                    placeholder="+229 ..." 
                     className="h-14 bg-muted/30 border-border/50 rounded-xl focus:ring-primary"
                   />
                 </div>
@@ -134,6 +158,7 @@ export const ContactPage: React.FC = () => {
                 <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest ml-1">Email</Label>
                 <Input 
                   id="email" 
+                  name="email"
                   required 
                   type="email" 
                   placeholder="votre@email.com" 
@@ -145,6 +170,7 @@ export const ContactPage: React.FC = () => {
                 <Label htmlFor="message" className="text-xs font-bold uppercase tracking-widest ml-1">Message</Label>
                 <Textarea 
                   id="message" 
+                  name="message"
                   required 
                   placeholder="Comment pouvons-nous vous aider ?" 
                   className="min-h-[150px] bg-muted/30 border-border/50 rounded-xl focus:ring-primary resize-none"
@@ -153,9 +179,10 @@ export const ContactPage: React.FC = () => {
 
               <Button 
                 type="submit" 
+                disabled={loading}
                 className="w-full h-16 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 group"
               >
-                Envoyer le Message
+                {loading ? 'Envoi en cours...' : 'Envoyer le Message'}
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </form>
@@ -169,7 +196,7 @@ export const ContactPage: React.FC = () => {
         <div className="max-w-7xl mx-auto flex flex-col gap-12">
           <div className="flex flex-col items-center text-center gap-4">
             <UtensilsCrossed className="w-10 h-10 text-primary" />
-            <h2 className="text-4xl font-display font-bold">Retrouvez-nous sur la <span className="italic text-primary">carte</span></h2>
+            <h2 className="text-4xl font-display font-bold">Contactez-nous</h2>
           </div>
           <div className="rounded-[48px] overflow-hidden shadow-2xl border-8 border-white h-[500px]">
             <iframe 
