@@ -3,6 +3,7 @@ import { Utensils, Clock, MapPin, Star, ArrowRight, Phone, Instagram, Facebook, 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { motion } from 'framer-motion';
+import { useOpeningStatus } from '@/hooks/useOpeningHours';
 
 interface MenuItem {
   id: string;
@@ -18,15 +19,15 @@ const featuredItems: MenuItem[] = [
   {
     id: '1',
     name: 'Amiwo au Poulet',
-    description: 'Le classique du Bénin. Pommes de terre grillées accompagnées de sauce tomate épicée et poulet rôti.',
+    description: 'Le classique du Benin. Pommes de terre grillees accompagnees de sauce tomate epicee et poulet roti.',
     price: '4.500 XOF',
     category: 'Signature',
     image_url: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop'
   },
   {
     id: '2',
-    name: 'Wagassi Grillé',
-    description: 'Fromage deinggué traditionnellement grillé, accompagné de Sauce Arachide et de pikliz.',
+    name: 'Wagassi Grille',
+    description: 'Fromage deinggue traditionnellement grille, accompagne de Sauce Arachide et de pikliz.',
     price: '3.500 XOF',
     category: 'Signature',
     image_url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop'
@@ -34,7 +35,7 @@ const featuredItems: MenuItem[] = [
   {
     id: '3',
     name: 'Foutou Banane',
-    description: 'Purée de bananes plantains pilée, servie avec sauce graine et viande de boeuf.',
+    description: 'Puree de bananes plantains pilee, servie avec sauce graine et viande de boeuf.',
     price: '5.000 XOF',
     category: ' Traditionnel',
     image_url: 'https://images.unsplash.com/photo-1607532941433-304659e8198a?q=80&w=800&auto=format&fit=crop'
@@ -42,12 +43,44 @@ const featuredItems: MenuItem[] = [
 ];
 
 export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ onPageChange }) => {
+  const { status, isOpen, nextOpenTime } = useOpeningStatus();
+  
   const stats = [
     { label: 'Plats Authentiques', value: '50+' },
     { label: 'Clients Heureux', value: '10k+' },
-    { label: "Ans d'Expérience", value: '15+' },
-    { label: 'Épices Secrètes', value: '25+' },
+    { label: "Ans d'Experience", value: '15+' },
+    { label: 'Epices Secretes', value: '25+' },
   ];
+
+  const getStatusColor = () => {
+    switch (status) {
+      case 'Ouvert':
+        return 'text-green-500';
+      case 'Ferme':
+        return 'text-red-500';
+      case 'Ouvre bientot':
+        return 'text-yellow-500';
+      case 'Ferme bientot':
+        return 'text-orange-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
+
+  const getStatusBgColor = () => {
+    switch (status) {
+      case 'Ouvert':
+        return 'bg-green-500/10 border-green-500/20';
+      case 'Ferme':
+        return 'bg-red-500/10 border-red-500/20';
+      case 'Ouvre bientot':
+        return 'bg-yellow-500/10 border-yellow-500/20';
+      case 'Ferme bientot':
+        return 'bg-orange-500/10 border-orange-500/20';
+      default:
+        return 'bg-gray-500/10 border-gray-500/20';
+    }
+  };
 
   return (
     <div className="flex flex-col w-full overflow-hidden">
@@ -75,14 +108,14 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
           >
             <div className="flex items-center gap-3 py-2 px-4 bg-primary/20 backdrop-blur-md rounded-full border border-primary/30 self-start">
               <Star className="w-4 h-4 text-primary fill-primary" />
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Le Goût de l'Excellence</span>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Le Gout de l'Excellence</span>
             </div>
             <h1 className="text-6xl md:text-8xl font-display font-bold text-white leading-[0.9] max-w-3xl drop-shadow-2xl">
               Authentique <br />
-              <span className="text-primary italic">Saveurs</span> du Bénin
+              <span className="text-primary italic">Saveurs</span> du Benin
             </h1>
             <p className="text-lg md:text-xl text-white/80 max-w-xl leading-relaxed font-medium">
-              Découvrez l'art de la cuisine béninoise traditionnelle. Des ingrédients frais, des épices rares et une passion infinie dans chaque assiette.
+              Decouvrez l'art de la cuisine beninoise traditionnelle. Des ingredients frais, des epices rares et une passion infinie dans chaque assiette.
             </p>
           </motion.div>
 
@@ -106,7 +139,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
               className="h-16 px-10 text-lg font-bold border-white/30 bg-white/10 text-white backdrop-blur-md hover:bg-white/20 transition-all"
               onClick={() => onPageChange('reservation')}
             >
-              Réserver une Table
+              Reserver une Table
             </Button>
           </motion.div>
 
@@ -152,13 +185,13 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
                 <Star className="w-4 h-4 text-primary fill-primary" />
               </div>
               <p className="text-xs font-medium italic text-foreground/80 leading-relaxed">
-                "Une explosion de saveurs béninoises. Le meilleur Wagassi grillé de la région !"
+                "Une explosion de saveurs beninoises. Le meilleur Wagassi grille de la region !"
               </p>
               <div className="mt-4 pt-4 border-t border-border flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">JD</div>
                 <div className="flex flex-col">
                   <span className="text-[10px] font-bold uppercase tracking-wider">Jean-Daniel T.</span>
-                  <span className="text-[8px] text-muted-foreground uppercase tracking-widest">Client Fidèle</span>
+                  <span className="text-[8px] text-muted-foreground uppercase tracking-widest">Client Fidele</span>
                 </div>
               </div>
             </div>
@@ -168,13 +201,13 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
             <div className="flex flex-col gap-4">
               <span className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Notre Histoire</span>
               <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground leading-tight">
-                Une Passion pour la <span className="italic text-primary">Tradition</span> et la Qualité
+                Une Passion pour la <span className="italic text-primary">Tradition</span> et la Qualite
               </h2>
             </div>
             
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Fondé à Agblangandan avec la vision de célébrer le patrimoine culinaire du Bénin, WADOU Tasty est devenu une référence pour les amateurs de cuisine authentique. 
-              Chaque plat raconte une histoire, celle de nos mères et de nos ancêtres, préparé avec les meilleurs produits de nos terroirs.
+              Fonde a Agblangandan avec la vision de celebrer le patrimoine culinaire du Benin, WADOU Tasty est devenu une reference pour les amateurs de cuisine authentique. 
+              Chaque plat raconte une histoire, celle de nos meres et de nos ancetres, prepare avec les meilleurs produits de nos terroir.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -182,7 +215,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
                 <Utensils className="w-8 h-8 text-primary shrink-0" />
                 <div className="flex flex-col gap-1">
                   <h4 className="font-display font-bold text-lg">Cuisine Locale</h4>
-                  <p className="text-sm text-muted-foreground">Recettes ancestrales authentiques du sud au nord du Bénin.</p>
+                  <p className="text-sm text-muted-foreground">Recettes ancestrales authentiques du sud au nord du Benin.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 p-6 bg-accent/5 rounded-2xl border border-accent/10">
@@ -210,7 +243,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
         <div className="max-w-7xl mx-auto flex flex-col gap-16">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="flex flex-col gap-4">
-              <span className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Sélection du Chef</span>
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Selection du Chef</span>
               <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground leading-tight">
                 Nos Plats <span className="italic text-primary">Signatures</span>
               </h2>
@@ -274,7 +307,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
           <div className="relative w-full">
             <div className="flex flex-col gap-8 p-12 bg-white/5 backdrop-blur-xl rounded-[40px] border border-white/10 shadow-2xl">
               <p className="text-xl md:text-2xl text-white/90 italic leading-relaxed font-medium">
-                "WADOU Tasty est bien plus qu'un restaurant, c'est une expérience. L'accueil est aussi chaleureux que les plats sont savoureux. L'Amiwo au poulet est tout simplement divin. Un passage incontourn à Agblangandan !"
+                "WADOU Tasty est bien plus qu'un restaurant, c'est une experience. L'accueil est aussi chaleureux que les plats sont savoureux. L'Amiwo au poulet est tout simplement divin. Un passage incontourn a Agblangandan !"
               </p>
               <div className="flex flex-col items-center gap-4">
                 <div className="flex items-center gap-1">
@@ -308,8 +341,19 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
             <div className="flex flex-col gap-4">
               <span className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Informations Pratiques</span>
               <h2 className="text-4xl font-display font-bold text-foreground leading-tight">
-                Nous sommes <span className="italic text-primary">faciles</span> à trouver
+                Nous sommes <span className="italic text-primary">faciles</span> a trouver
               </h2>
+            </div>
+
+            {/* Opening Status - Dynamic */}
+            <div className={`flex items-center justify-between p-4 rounded-xl border ${getStatusBgColor()}`}>
+              <div className="flex items-center gap-3">
+                <div className={`w-3 h-3 rounded-full ${isOpen ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                <span className="font-bold text-lg">Nos horaires d'ouverture</span>
+              </div>
+              <span className={`font-bold text-lg ${getStatusColor()}`}>
+                {status}
+              </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -324,7 +368,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
               </div>
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-xs">
-                  <Phone className="w-4 h-4" /> Téléphone
+                  <Phone className="w-4 h-4" /> Telephone
                 </div>
                 <a href="tel:+22966620716" className="text-lg font-display font-bold hover:text-primary transition-colors">
                   +229 66620716
@@ -335,16 +379,16 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
                   <Clock className="w-4 h-4" /> Horaires d'Ouverture
                 </div>
                 <div className="flex flex-col">
-                   <span className="font-bold">Lun-Jeu: 10:00 - 23:00</span>
-                   <span className="font-bold text-primary">Ven-Sam: 10:00 - 00:00</span>
-                   <span className="font-bold">Dimanche: 12:00 - 22:00</span>
+                   <span className="font-bold">Lun-Jeu: 10:00 - 12:00</span>
+                   <span className="font-bold">Ven-Sam: 10:00 - 12:00</span>
+                   <span className="font-bold">Dimanche: 12:00 - 12:00</span>
                 </div>
               </div>
             </div>
 
             <div className="mt-auto flex flex-col gap-6 pt-10 border-t border-primary/10">
               <p className="text-muted-foreground font-medium italic">
-                "Prêt pour une explosion de saveurs ? Appelez-nous pour commander ou réservez votre table en ligne dès maintenant."
+                "Pret pour une explosion de saveurs ? Appelez-nous pour commander ou reservez votre table en ligne des maintenant."
               </p>
               <div className="flex items-center gap-4">
                 <Button 
@@ -352,7 +396,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
                    className="h-14 px-8 rounded-xl font-bold flex-1 sm:flex-none"
                    onClick={() => onPageChange('reservation')}
                 >
-                  Réserver en Ligne
+                  Reserver en Ligne
                 </Button>
                 <Button 
                    size="lg" 
@@ -389,7 +433,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
               Rejoignez-nous pour un festin <span className="text-foreground italic underline underline-offset-8 decoration-accent/40">inoubliable</span>.
             </h2>
             <p className="text-xl text-white/90 max-w-xl font-medium">
-              Vivez le Bénin authentique à travers sa gastronomie riche et généreuse. 
+              Vivez le Benin authentique a travers sa gastronomie riche et genereuse. 
               Votre table vous attend.
             </p>
             <Button 
@@ -398,7 +442,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
               className="h-16 px-12 text-lg font-bold rounded-2xl shadow-2xl hover:bg-white hover:scale-105 transition-all"
               onClick={() => onPageChange('reservation')}
             >
-              Réserver Maintenant <ChevronRight className="ml-2 w-6 h-6" />
+              Reserver Maintenant <ChevronRight className="ml-2 w-6 h-6" />
             </Button>
           </div>
         </div>
