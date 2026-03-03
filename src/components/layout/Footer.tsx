@@ -1,6 +1,5 @@
 import React from 'react';
 import { UtensilsCrossed, Facebook, Instagram, Twitter, Phone, Mail, MapPin, Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -17,12 +16,12 @@ export const Footer: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-display font-bold leading-none tracking-tight">WADOU Tasty</span>
-              <span className="text-[10px] uppercase tracking-[0.2em] font-medium opacity-80">Saveurs du Bénin</span>
+              <span className="text-[10px] uppercase tracking-[0.2em] font-medium opacity-80">Saveurs du Benin</span>
             </div>
           </div>
           <p className="text-background/70 text-sm leading-relaxed max-w-xs">
-            Découvrez l'authenticité de la cuisine béninoise chez WADOU Tasty. 
-            Des recettes ancestrales revisitées avec passion pour un voyage culinaire inoubliable.
+            Decouvrez l'authenticite de la cuisine beninoise chez WADOU Tasty. 
+            Des recettes ancestrales revisittees avec passion pour un voyage culinaire inoubliable.
           </p>
           <div className="flex items-center gap-4 mt-4">
             <a href="#" className="p-2 bg-background/5 rounded-full hover:bg-primary transition-colors hover:text-white border border-background/10">
@@ -43,7 +42,7 @@ export const Footer: React.FC = () => {
           <ul className="flex flex-col gap-4">
             <li><a href="#" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2 group"><div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" /> Accueil</a></li>
             <li><a href="#" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2 group"><div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" /> Notre Menu</a></li>
-            <li><a href="#" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2 group"><div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" /> Réservations</a></li>
+            <li><a href="#" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2 group"><div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" /> Reservations</a></li>
             <li><a href="#" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2 group"><div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" /> Nous Contacter</a></li>
           </ul>
         </div>
@@ -66,7 +65,7 @@ export const Footer: React.FC = () => {
                 <Phone className="w-5 h-5 text-primary" />
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-xs uppercase tracking-widest text-background/50">Téléphone</span>
+                <span className="text-xs uppercase tracking-widest text-background/50">Telephone</span>
                 <a href="tel:+22966620716" className="text-sm font-medium hover:text-primary transition-colors">+229 66620716</a>
               </div>
             </li>
@@ -85,29 +84,39 @@ export const Footer: React.FC = () => {
         {/* Opening Hours */}
         <div className="flex flex-col gap-8">
           <h3 className="text-lg font-display font-bold uppercase tracking-wider text-primary">Horaires</h3>
-          <ul className="flex flex-col gap-4">
-            <li className="flex flex-col gap-1">
-              <div className="flex items-center justify-between text-sm font-medium">
-                <span className="text-background/70">Lun - Jeu</span>
-                <span>10:00 - 23:00</span>
-              </div>
+          <ul className="flex flex-col gap-3">
+            <li className="flex items-center justify-between text-sm font-medium">
+              <span className="text-background/70">Lundi</span>
+              <span>10H00 - 12H00</span>
             </li>
-            <li className="flex flex-col gap-1">
-              <div className="flex items-center justify-between text-sm font-medium">
-                <span className="text-background/70">Ven - Sam</span>
-                <span className="text-primary">10:00 - 00:00</span>
-              </div>
+            <li className="flex items-center justify-between text-sm font-medium">
+              <span className="text-background/70">Mardi</span>
+              <span>10H00 - 12H00</span>
             </li>
-            <li className="flex flex-col gap-1">
-              <div className="flex items-center justify-between text-sm font-medium">
-                <span className="text-background/70">Dimanche</span>
-                <span>12:00 - 22:00</span>
-              </div>
+            <li className="flex items-center justify-between text-sm font-medium">
+              <span className="text-background/70">Mercredi</span>
+              <span>10H00 - 12H00</span>
+            </li>
+            <li className="flex items-center justify-between text-sm font-medium">
+              <span className="text-background/70">Jeudi</span>
+              <span>10H00 - 12H00</span>
+            </li>
+            <li className="flex items-center justify-between text-sm font-medium">
+              <span className="text-background/70">Vendredi</span>
+              <span>10H00 - 12H00</span>
+            </li>
+            <li className="flex items-center justify-between text-sm font-medium">
+              <span className="text-background/70">Samedi</span>
+              <span className="text-primary">12H00 - 12H00</span>
+            </li>
+            <li className="flex items-center justify-between text-sm font-medium">
+              <span className="text-background/70">Dimanche</span>
+              <span className="text-primary">12H00 - 12H00</span>
             </li>
             <li className="flex flex-col gap-1 mt-4">
               <div className="flex items-center gap-3 p-3 bg-background/5 rounded-xl border border-background/10">
                 <Clock className="w-5 h-5 text-primary shrink-0" />
-                <span className="text-xs italic text-background/60 leading-tight">Nos horaires peuvent varier les jours fériés.</span>
+                <span className="text-xs italic text-background/60 leading-tight">Nos horaires peuvent varier les jours feries.</span>
               </div>
             </li>
           </ul>
@@ -117,10 +126,10 @@ export const Footer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-background/10 flex flex-col md:flex-row items-center justify-between gap-6">
         <p className="text-xs text-background/40 font-medium">
-          &copy; 2026 WADOU Tasty BENIN. Tous droits réservés.
+          &copy; {currentYear} WADOU Tasty BENIN. Tous droits reserves.
         </p>
         <div className="flex items-center gap-8 text-xs text-background/40 font-medium">
-          <a href="#" className="hover:text-primary transition-colors">Politique de Confidentialité</a>
+          <a href="#" className="hover:text-primary transition-colors">Politique de Confidentialite</a>
           <a href="#" className="hover:text-primary transition-colors">ADH Digital</a>
         </div>
       </div>
