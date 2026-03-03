@@ -13,7 +13,7 @@ export const Loader: React.FC<LoaderProps> = ({ size = 'md' }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-secondary/50 flex flex-col items-center justify-center z-50">
+    <div className="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
       <div className="flex flex-col items-center gap-6">
         <div className="relative">
           <div className={`${sizeClasses[size]} animate-spin`}>
@@ -96,14 +96,14 @@ export const PageLoader: React.FC = () => {
 
   if (isReady) {
     return (
-      <div className="fixed inset-0 bg-secondary/50 flex flex-col items-center justify-center z-[9999] transition-opacity duration-500 opacity-0 pointer-events-none">
+      <div className="fixed inset-0 bg-white flex flex-col items-center justify-center z-[9999] transition-opacity duration-500 opacity-0 pointer-events-none">
         <PageLoaderContent currentImageIndex={currentImageIndex} />
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-secondary/50 flex flex-col items-center justify-center z-[9999]">
+    <div className="fixed inset-0 bg-white flex flex-col items-center justify-center z-[9999]">
       <PageLoaderContent currentImageIndex={currentImageIndex} />
     </div>
   );
