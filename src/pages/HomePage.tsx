@@ -1,9 +1,11 @@
-import React from 'react';
-import { Utensils, Clock, MapPin, Star, ArrowRight, Phone, Instagram, Facebook, UtensilsCrossed, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Utensils, Clock, MapPin, Star, ArrowRight, Phone, Instagram, Facebook, UtensilsCrossed, ChevronRight, Quote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { useOpeningStatus } from '@/hooks/useOpeningHours';
+import { ReviewForm } from '@/components/ReviewForm';
+import { getApprovedReviews, Review } from '@/lib/database';
 
 interface MenuItem {
   id: string;
@@ -44,6 +46,26 @@ const featuredItems: MenuItem[] = [
 
 export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ onPageChange }) => {
   const { status, isOpen, nextOpenTime } = useOpeningStatus();
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+  const [averageRating, setAverageRating] = useState(0);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  
+  // Load reviews
+  useEffect(() => {
+    loadReviews();
+  }, []);
+
+  const loadReviews = async () => {
+    setLoadingReviews(true);
+    const data = await getApprovedReviews();
+    setReviews(data);
+    if (data.length > 0) {
+      const total = data.reduce((acc, review) => acc + review.rating, 0);
+      setAverageRating((total / data.length).toFixed(1) as any);
+    }
+    setLoadingReviews(false);
+  };
   
   const stats = [
     { label: 'Plats Authentiques', value: '50+' },
@@ -56,7 +78,7 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
     switch (status) {
       case 'Ouvert':
         return 'text-green-500';
-      case 'Ferme':
+      case 'Fermé':
         return 'text-red-500';
       case 'Ouvre bientot':
         return 'text-yellow-500';
@@ -292,44 +314,125 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-24 px-6 lg:px-12 bg-foreground relative overflow-hidden">
-        {/* Abstract Background Shapes */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-0" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[100px] -z-0" />
+      {/* Temoignages - Avis clients */}
+      <section className="py-24 px-6 lg:px-12 bg-secondary/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground leading-tight mb-4">
+              Nos <span className="italic text-primary">Temoignages</span>
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Decouvrez ce que nos clients disent de leur experience chez WADOU Tasty
+            </p>
+          </div>
 
-        <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-12 relative z-10">
-          <UtensilsCrossed className="w-12 h-12 text-primary animate-bounce" />
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-white leading-tight">
-            Ce que disent nos <span className="italic text-primary">convives</span>
-          </h2>
-          
-          <div className="relative w-full">
-            <div className="flex flex-col gap-8 p-12 bg-white/5 backdrop-blur-xl rounded-[40px] border border-white/10 shadow-2xl">
-              <p className="text-xl md:text-2xl text-white/90 italic leading-relaxed font-medium">
-                "WADOU Tasty est bien plus qu'un restaurant, c'est une experience. L'accueil est aussi chaleureux que les plats sont savoureux. L'Amiwo au poulet est tout simplement divin. Un passage incontourn a Agblangandan !"
-              </p>
-              <div className="flex flex-col items-center gap-4">
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((i) => <Star key={i} className="w-5 h-5 text-primary fill-primary" />)}
+          {/* Stats - Moyenne des notes */}
+          <div className="flex flex-col items-center justify-center mb-12">
+            <div className="flex items-center gap-4">
+              <div className="text-6xl font-display font-bold text-primary">{averageRating}</div>
+              <div className="flex flex-col">
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`w-6 h-6 ${
+                        star <= Math.round(averageRating)
+                          ? 'text-yellow-400 fill-yellow-400'
+                          : 'text-gray-300'
+                      }`}
+                    />
+                  ))}
                 </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-lg font-display font-bold text-white uppercase tracking-widest">Koffi A.</span>
-                  <span className="text-xs text-primary font-bold uppercase tracking-[0.2em] mt-1">Guide Culinaire</span>
-                </div>
+                <span className="text-sm text-muted-foreground">{reviews.length} avis</span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-6 mt-8">
-            <a href="#" className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all group">
-              <Instagram className="w-5 h-5 text-white/60 group-hover:text-primary transition-colors" />
-              <span className="text-sm font-bold text-white/80">Instagram</span>
-            </a>
-            <a href="#" className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all group">
-              <Facebook className="w-5 h-5 text-white/60 group-hover:text-primary transition-colors" />
-              <span className="text-sm font-bold text-white/80">Facebook</span>
-            </a>
+          {/* Liste des avis */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+            {loadingReviews ? (
+              <div className="col-span-2 text-center py-12">
+                <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
+                <p className="text-muted-foreground mt-4">Chargement des avis...</p>
+              </div>
+            ) : reviews.length > 0 ? (
+              reviews.slice(0, 4).map((review) => (
+                <Card key={review.id} className="bg-white rounded-2xl shadow-lg p-6">
+                  <Quote className="w-8 h-8 text-primary/10 mb-4" />
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                      <span className="text-lg font-bold text-primary">
+                        {review.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-bold text-foreground">{review.name}</h4>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`w-4 h-4 ${
+                                star <= review.rating
+                                  ? 'text-yellow-400 fill-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {review.comment}
+                      </p>
+                      {review.created_at && (
+                        <p className="text-xs text-muted-foreground mt-4">
+                          {new Date(review.created_at).toLocaleDateString('fr-FR', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-2 text-center py-12 bg-white rounded-2xl shadow-lg">
+                <Star className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+                <p className="text-muted-foreground">
+                  Aucun avis pour le moment. Soyez le premier a donner votre avis!
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Formulaire d'avis */}
+          <div className="max-w-md mx-auto">
+            {showReviewForm ? (
+              <div className="bg-white rounded-2xl shadow-xl p-6">
+                <ReviewForm onSuccess={() => {
+                  loadReviews();
+                  setShowReviewForm(false);
+                }} />
+                <Button 
+                  variant="outline" 
+                  className="w-full mt-4"
+                  onClick={() => setShowReviewForm(false)}
+                >
+                  Annuler
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                size="lg"
+                className="h-14 px-8 rounded-xl font-bold"
+                onClick={() => setShowReviewForm(true)}
+              >
+                <Star className="w-5 h-5 mr-2" />
+                Laissez votre avis
+              </Button>
+            )}
           </div>
         </div>
       </section>

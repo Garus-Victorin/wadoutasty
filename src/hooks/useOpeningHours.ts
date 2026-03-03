@@ -14,7 +14,7 @@ const openingHours: OpeningHours = {
   Sunday: { open: '12:00', close: '12:00' },
 };
 
-type Status = 'Ouvert' | 'Ferme' | 'Ouvre bientot' | 'Ferme bientot';
+type Status = 'Ouvert' | 'Fermé' | 'Ouvre bientot' | 'Ferme bientot';
 
 function parseTime(timeStr: string): { hours: number; minutes: number } {
   const [hours, minutes] = timeStr.split(':').map(Number);
@@ -60,7 +60,7 @@ function isOpenNow(dayName: string): boolean {
 
 function getOpeningStatus(dayName: string): Status {
   const hours = openingHours[dayName];
-  if (!hours) return 'Ferme';
+  if (!hours) return 'Fermé';
   
   const currentMinutes = getCurrentTimeMinutes();
   const openMinutes = timeToMinutes(hours.open);
@@ -94,12 +94,12 @@ function getOpeningStatus(dayName: string): Status {
         return 'Ouvre bientot';
       }
     }
-    return 'Ferme';
+    return 'Fermé';
   }
 }
 
 export function useOpeningStatus() {
-  const [status, setStatus] = useState<Status>('Ferme');
+  const [status, setStatus] = useState<Status>('Fermé');
   const [currentDay, setCurrentDay] = useState<string>('');
   const [nextOpenTime, setNextOpenTime] = useState<string>('');
 
@@ -113,7 +113,7 @@ export function useOpeningStatus() {
       setCurrentDay(dayName);
       
       // Find next opening time if closed
-      if (todayStatus === 'Ferme') {
+      if (todayStatus === 'Fermé') {
         const days: (keyof typeof openingHours)[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         const todayIndex = days.indexOf(dayName as keyof typeof openingHours);
         

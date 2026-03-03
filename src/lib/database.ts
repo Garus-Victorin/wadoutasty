@@ -48,6 +48,15 @@ export interface Order {
   created_at?: string;
 }
 
+export interface Review {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  approved: boolean;
+  created_at?: string;
+}
+
 export interface Admin {
   id: string;
   email: string;
@@ -271,6 +280,74 @@ export const deleteOrder = async (id: string): Promise<boolean> => {
   
   if (error) {
     console.error('Error deleting order:', error);
+    return false;
+  }
+  return true;
+};
+
+// Reviews (Avis)
+export const getApprovedReviews = async (): Promise<Review[]> => {
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('approved', true)
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching reviews:', error);
+    return [];
+  }
+  return data || [];
+};
+
+export const getAllReviews = async (): Promise<Review[]> => {
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching reviews:', error);
+    return [];
+  }
+  return data || [];
+};
+
+export const addReview = async (review: Omit<Review, 'id' | 'created_at' | 'approved'>): Promise<Review | null> => {
+  const { data, error } = await supabase
+    .from('reviews')
+    .insert({ ...review, approved: false })
+    .select()
+    .single();
+  
+  if (error) {
+    console.error('Error adding review:', error);
+    return null;
+  }
+  return data;
+};
+
+export const approveReview = async (id: string): Promise<boolean> => {
+  const { error } = await supabase
+    .from('reviews')
+    .update({ approved: true })
+    .eq('id', id);
+  
+  if (error) {
+    console.error('Error approving review:', error);
+    return false;
+  }
+  return true;
+};
+
+export const deleteReview = async (id: string): Promise<boolean> => {
+  const { error } = await supabase
+    .from('reviews')
+    .delete()
+    .eq('id', id);
+  
+  if (error) {
+    console.error('Error deleting review:', error);
     return false;
   }
   return true;

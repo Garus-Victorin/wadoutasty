@@ -72,6 +72,18 @@ CREATE TABLE IF NOT EXISTS commandes (
 );
 
 -- ============================================
+-- Table: reviews (Avis des clients)
+-- ============================================
+CREATE TABLE IF NOT EXISTS reviews (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    comment TEXT NOT NULL,
+    approved BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================
 -- Configuration des politiques RLS (Row Level Security)
 -- ============================================
 
@@ -111,3 +123,12 @@ CREATE POLICY "commandes_select" ON commandes FOR SELECT USING (true);
 CREATE POLICY "commandes_insert" ON commandes FOR INSERT WITH CHECK (true);
 CREATE POLICY "commandes_update" ON commandes FOR UPDATE USING (true);
 CREATE POLICY "commandes_delete" ON commandes FOR DELETE USING (true);
+
+-- Politique pour reviews
+ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "reviews_select" ON reviews FOR SELECT USING (true);
+CREATE POLICY "reviews_insert" ON reviews FOR INSERT WITH CHECK (true);
+CREATE POLICY "reviews_update" ON reviews FOR UPDATE USING (true);
+CREATE POLICY "reviews_delete" ON reviews FOR DELETE USING (true);
+
+

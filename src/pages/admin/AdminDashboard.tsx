@@ -16,7 +16,10 @@ import {
   FolderPlus,
   Tags,
   AlertTriangle,
-  ShoppingBag
+  ShoppingBag,
+  Star,
+  CheckCircle,
+  XCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,13 +42,17 @@ import {
   updateOrder,
   deleteOrder,
   initDatabase,
+  getAllReviews,
+  approveReview,
+  deleteReview,
   MenuItem,
   Reservation,
   Contact,
-  Order
+  Order,
+  Review
 } from '@/lib/database';
 
-type AdminPage = 'dashboard' | 'menu' | 'categories' | 'reservations' | 'contacts' | 'orders';
+type AdminPage = 'dashboard' | 'menu' | 'categories' | 'reservations' | 'contacts' | 'orders' | 'reviews';
 
 type ReservationStatus = 'en attente' | 'en cours' | 'termine';
 
@@ -64,6 +71,7 @@ export const AdminDashboard: React.FC = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [categories, setCategories] = useState<string[]>(defaultCategories);
   const [loading, setLoading] = useState(true);
   
@@ -97,16 +105,18 @@ export const AdminDashboard: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     await initDatabase();
-    const [menu, res, contactsData, ordersData] = await Promise.all([
+    const [menu, res, contactsData, ordersData, reviewsData] = await Promise.all([
       getMenuItems(),
       getReservations(),
       getContacts(),
-      getOrders()
+      getOrders(),
+      getAllReviews()
     ]);
     setMenuItems(menu);
     setReservations(res);
     setContacts(contactsData);
     setOrders(ordersData);
+    setReviews(reviewsData);
     setLoading(false);
   };
 
@@ -213,10 +223,23 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleApproveReview = async (id: string) => {
+    await approveReview(id);
+    loadData();
+  };
+
+  const handleDeleteReview = async (id: string) => {
+    if (confirm('Etes-vous sur de vouloir supprimer cet avis?')) {
+      await deleteReview(id);
+      loadData();
+    }
+  };
+
   const pendingReservations = reservations.filter(r => r.status === 'en attente').length;
   const totalReservations = reservations.length;
   const unreadContacts = contacts.filter(c => !c.read).length;
   const pendingOrders = orders.filter(o => o.status === 'en attente').length;
+  const pendingReviews = reviews.filter(r => !r.approved).length;
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
@@ -323,6 +346,19 @@ export const AdminDashboard: React.FC = () => {
             <span>Reservations</span>
             {pendingReservations > 0 && (
               <Badge className="ml-auto bg-red-500">{pendingReservations}</Badge>
+            )}
+          </button>
+          
+          <button
+            onClick={() => setCurrentPage('reviews')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+              currentPage === 'reviews' ? 'bg-primary text-white' : 'text-white/70 hover:bg-white/10'
+            }`}
+          >
+            <Star className="w-5 h-5" />
+            <span>Avis</span>
+            {pendingReviews > 0 && (
+              <Badge className="ml-auto bg-red-500">{pendingReviews}</Badge>
             )}
           </button>
           
@@ -832,7 +868,7 @@ export const AdminDashboard: React.FC = () => {
               </div>
             )}
 
-            {deletingOrder && (
+            {delitingOrder && (
               <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
                 <Card className="bg-white rounded-2xl w-full max-w-md">
                   <CardHeader>
@@ -960,6 +996,99 @@ export const AdminDashboard: React.FC = () => {
                 </Card>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Reviews */}
+        {currentPage === 'reviews' && (
+          <div>
+            <h1 className="text-3xl font-display font-bold text-gray-900 mb-8">Gestion des Avis</h1>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Pending Reviews */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <XCircle className="w-5 h-5 text-orange-500" />
+                  Avis en attente de validation
+                </h2>
+                <div className="space-y-4">
+                  {reviews.filter(r => !r.approved).map(review => (
+                    <Card key={review.id} className="bg-white rounded-2xl shadow-sm border-l-4 border-l-orange-500">
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                              <span className="font-bold text-primary">{review.name.charAt(0).toUpperCase()}</span>
+                            </div>
+                            <div>
+                              <p className="font-bold">{review.name}</p>
+                              <p className="text-xs text-gray-500">{new Date(review.created_at || '').toLocaleDateString('fr-FR')}</p>
+                            </div>
+                          </div>
+                          <div className="flex gap-1">
+                            {[1, 2, 3, 4, 5].map(star => (
+                              <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+                            ))}
+                          </div>
+                        </div>
+                        <p className="text-gray-600 text-sm mb-4">{review.comment}</p>
+                        <div className="flex gap-2">
+                          <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleApproveReview(review.id)}>
+                            <CheckCircle className="w-4 h-4 mr-1" />
+                            Approuver
+                          </Button>
+                          <Button size="sm" variant="destructive" onClick={() => handleDeleteReview(review.id)}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  {reviews.filter(r => !r.approved).length === 0 && (
+                    <p className="text-gray-500 text-center py-8">Aucun avis en attente</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Approved Reviews */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Avis approuves
+                </h2>
+                <div className="space-y-4">
+                  {reviews.filter(r => r.approved).map(review => (
+                    <Card key={review.id} className="bg-white rounded-2xl shadow-sm border-l-4 border-l-green-500">
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                              <span className="font-bold text-primary">{review.name.charAt(0).toUpperCase()}</span>
+                            </div>
+                            <div>
+                              <p className="font-bold">{review.name}</p>
+                              <p className="text-xs text-gray-500">{new Date(review.created_at || '').toLocaleDateString('fr-FR')}</p>
+                            </div>
+                          </div>
+                          <div className="flex gap-1">
+                            {[1, 2, 3, 4, 5].map(star => (
+                              <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+                            ))}
+                          </div>
+                        </div>
+                        <p className="text-gray-600 text-sm mb-4">{review.comment}</p>
+                        <Button size="sm" variant="destructive" onClick={() => handleDeleteReview(review.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  {reviews.filter(r => r.approved).length === 0 && (
+                    <p className="text-gray-500 text-center py-8">Aucun avis approuve</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
