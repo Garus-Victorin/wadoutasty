@@ -346,12 +346,12 @@ export const HomePage: React.FC<{ onPageChange: (page: string) => void }> = ({ o
             </div>
 
             {/* Opening Status - Dynamic */}
-            <div className={`flex items-center justify-between p-4 rounded-xl border ${getStatusBgColor()}`}>
+            <div className={`flex items-center justify-between `}>
               <div className="flex items-center gap-3">
-                <div className={`w-3 h-3 rounded-full ${isOpen ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+
                 <span className="font-bold text-lg">Nos horaires d'ouverture</span>
               </div>
-              <span className={`font-bold text-lg ${getStatusColor()}`}>
+              <span className={`font-bold text-lg p-2 rounded-lg border ${getStatusBgColor()}  ${getStatusColor()}`}>
                 {status}
               </span>
             </div>
