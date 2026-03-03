@@ -1,12 +1,12 @@
 import React from 'react';
-import { UtensilsCrossed, Facebook, Instagram, Twitter, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { UtensilsCrossed, Facebook, Instagram, Twitter, Phone, Mail, MapPin } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-foreground text-background py-20 px-6 lg:px-12 border-t border-background/10">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
         
         {/* Brand Section */}
         <div className="flex flex-col gap-6">
@@ -76,47 +76,6 @@ export const Footer: React.FC = () => {
               <div className="flex flex-col gap-1">
                 <span className="text-xs uppercase tracking-widest text-background/50">Email</span>
                 <a href="mailto:contact@wadoutasty.bj" className="text-sm font-medium hover:text-primary transition-colors">contact@wadoutasty.bj</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        {/* Opening Hours */}
-        <div className="flex flex-col gap-8">
-          <h3 className="text-lg font-display font-bold uppercase tracking-wider text-primary">Horaires</h3>
-          <ul className="flex flex-col gap-3">
-            <li className="flex items-center justify-between text-sm font-medium">
-              <span className="text-background/70">Lundi</span>
-              <span>10H00 - 12H00</span>
-            </li>
-            <li className="flex items-center justify-between text-sm font-medium">
-              <span className="text-background/70">Mardi</span>
-              <span>10H00 - 12H00</span>
-            </li>
-            <li className="flex items-center justify-between text-sm font-medium">
-              <span className="text-background/70">Mercredi</span>
-              <span>10H00 - 12H00</span>
-            </li>
-            <li className="flex items-center justify-between text-sm font-medium">
-              <span className="text-background/70">Jeudi</span>
-              <span>10H00 - 12H00</span>
-            </li>
-            <li className="flex items-center justify-between text-sm font-medium">
-              <span className="text-background/70">Vendredi</span>
-              <span>10H00 - 12H00</span>
-            </li>
-            <li className="flex items-center justify-between text-sm font-medium">
-              <span className="text-background/70">Samedi</span>
-              <span className="text-primary">12H00 - 12H00</span>
-            </li>
-            <li className="flex items-center justify-between text-sm font-medium">
-              <span className="text-background/70">Dimanche</span>
-              <span className="text-primary">12H00 - 12H00</span>
-            </li>
-            <li className="flex flex-col gap-1 mt-4">
-              <div className="flex items-center gap-3 p-3 bg-background/5 rounded-xl border border-background/10">
-                <Clock className="w-5 h-5 text-primary shrink-0" />
-                <span className="text-xs italic text-background/60 leading-tight">Nos horaires peuvent varier les jours feries.</span>
               </div>
             </li>
           </ul>
